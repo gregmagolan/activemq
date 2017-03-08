@@ -244,20 +244,13 @@ public class RegionBroker extends EmptyBroker {
             throw new InvalidClientIDException("No clientID specified for connection request");
         }
 
+        LOG.info("New connection for clientId {}", clientId);
+
         ConnectionContext oldContext = null;
 
         synchronized (clientIdSet) {
             oldContext = clientIdSet.get(clientId);
-            if (oldContext != null) {
-                if (context.isAllowLinkStealing()) {
-                    clientIdSet.put(clientId, context);
-                } else {
-                    throw new InvalidClientIDException("Broker: " + getBrokerName() + " - Client: " + clientId + " already connected from "
-                        + oldContext.getConnection().getRemoteAddress());
-                }
-            } else {
-                clientIdSet.put(clientId, context);
-            }
+            clientIdSet.put(clientId, context);
         }
 
         if (oldContext != null) {

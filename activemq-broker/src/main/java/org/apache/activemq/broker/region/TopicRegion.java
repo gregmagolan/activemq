@@ -127,11 +127,6 @@ public class TopicRegion extends AbstractRegion {
             SubscriptionKey key = new SubscriptionKey(clientId, subscriptionName);
             DurableTopicSubscription sub = durableSubscriptions.get(key);
             if (sub != null) {
-                // throw this exception only if link stealing is off
-                if (!context.isAllowLinkStealing() && sub.isActive()) {
-                    throw new JMSException("Durable consumer is in use for client: " + clientId +
-                                           " and subscriptionName: " + subscriptionName);
-                }
                 // Has the selector changed??
                 if (hasDurableSubChanged(info, sub.getConsumerInfo())) {
                     // Remove the consumer first then add it.
